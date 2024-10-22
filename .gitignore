@@ -1,0 +1,23 @@
+# Visual Studio project files
+.vs/
+*.user
+*.suo
+*.ncb
+*.aps
+*.pch
+*.obj
+*.ilk
+*.idb
+*.pdb
+*.sbr
+*.tlb
+*.tli
+*.exp
+*.lib
+*.manifest
+*.lastbuildstate
+*Debug*/
+*Release*/
+obj/
+CoordinateTool/packages/
+CoordinateTool/bin/de/

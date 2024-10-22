@@ -1,0 +1,54 @@
+﻿<mah:MetroWindow x:Class="ALGTool.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:ALGTool.Views"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                  xmlns:vm="clr-namespace:ALGTool.ViewModels"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        Title="{Binding Title}" Height="550" Width="800" 
+            SaveWindowPosition="True"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 WindowTitleBrush="SkyBlue"
+        NonActiveWindowTitleBrush="OrangeRed"
+        Icon="../icons8-coordinate-system-90.png"
+        >
+    <Grid>
+
+        <mah:MetroTabControl SelectedIndex="1" TabStripPlacement="Left"  >
+
+            <mah:MetroTabItem  Height="35" Visibility="Collapsed" >
+                <mah:MetroTabItem.Header>
+                    <TextBlock Text="Create Template" VerticalAlignment="Center" Foreground="White" />
+                </mah:MetroTabItem.Header>
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <!--<v:CreateTamplateView></v:CreateTamplateView>-->
+                </Border>
+            </mah:MetroTabItem>
+            <mah:MetroTabItem Height="35" >
+
+                <mah:MetroTabItem.Header>
+                    <TextBlock Text="Coordinate Calibration" VerticalAlignment="Center" Foreground="White"/>
+                </mah:MetroTabItem.Header>
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <v:CoordinateCalibrateView></v:CoordinateCalibrateView>
+                </Border>
+            </mah:MetroTabItem>
+
+            <mah:MetroTabItem Height="35" >
+
+                <mah:MetroTabItem.Header>
+                    <TextBlock Text="Tcp Calibration" VerticalAlignment="Center" Foreground="White"/>
+                </mah:MetroTabItem.Header>
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <v:CalibrateTcpView></v:CalibrateTcpView>
+                </Border>
+            </mah:MetroTabItem>
+            
+        </mah:MetroTabControl>
+        <!--<ContentControl prism:RegionManager.RegionName="ContentRegion" />-->
+
+
+    </Grid>
+</mah:MetroWindow>

@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="ALGTool.Views.CoordinateCalibrateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"    
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:vm="clr-namespace:ALGTool.ViewModels"
+            xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+              d:DataContext="{d:DesignInstance Type=vm:CoordinateCalibrateViewModel}"
+               d:DesignHeight="650"
+            d:DesignWidth="600"
+            mc:Ignorable="d"
+             x:Name="coordinateView"
+             >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="5">
+            <mah:MetroHeader DockPanel.Dock="Top" Header="Settings"  >
+                <UniformGrid Columns="2" Rows="2" >
+                    
+                    <Button Content="Load Pixels" Command="{Binding LoadPixelsCmd}"/>
+                    <TextBox Text="{Binding PixelsFile}" IsReadOnly="True" VerticalContentAlignment="Center"/>
+                    
+                    <Button Content="Load Worlds" Command="{Binding LoadWorldsCmd}"/>
+                    <TextBox Text="{Binding WorldsFile}" IsReadOnly="True" VerticalContentAlignment="Center"/>
+
+                    <!--<Button Content="Load MidPoint" Command="{Binding LoadMidPointCmd}" />
+                    
+                    <UniformGrid Columns="2">
+                        <TextBlock Text="MidPoint.X" IsEnabled="False" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        <TextBox Text="{Binding DoPoint.X}" IsReadOnly="False" VerticalContentAlignment="Center"/>
+                        <TextBlock Text="MidPoint.Y" IsEnabled="False" HorizontalAlignment="Center"/>
+                        <TextBox Text="{Binding DoPoint.Y}" IsReadOnly="False" VerticalContentAlignment="Center"/>
+                    </UniformGrid>-->
+
+
+                </UniformGrid>
+            </mah:MetroHeader>
+        </Grid>
+
+        <Grid Margin="5" Grid.Row="1" >
+
+            <mah:MetroHeader DockPanel.Dock="Top" Header="Pixels"    >
+                <DataGrid ItemsSource="{Binding Pixels}" CanUserSortColumns="False"
+                          SelectedIndex="{Binding SelectIndex}"  AutoGenerateColumns="False" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding X}" Header="X" Width="80"/>
+                        <DataGridTextColumn Binding="{Binding Y}" Header="Y"  Width="80"/>
+                    </DataGrid.Columns>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding CmdAddRow}" Header="添加行"  CommandParameter="pixels"/>
+
+                            <MenuItem Command="{Binding CmdDelRow}" Header="删除行"  CommandParameter="pixels"/>
+                            <MenuItem Command="{Binding CmdClear}" Header="全部删除" CommandParameter="pixels"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+            </mah:MetroHeader>
+
+        </Grid>
+
+        <Grid Margin="5" Grid.Row="2">
+            <mah:MetroHeader DockPanel.Dock="Top" Header="Worlds">
+                <DataGrid ItemsSource="{Binding Worlds}" SelectedIndex="{Binding SelectIndex}" CanUserSortColumns="False" AutoGenerateColumns="False" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding X}" Header="X" Width="80"/>
+                        <DataGridTextColumn Binding="{Binding Y}" Header="Y"  Width="80"/>
+                    </DataGrid.Columns>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding CmdAddRow}" Header="添加行" CommandParameter="worlds"/>
+                            <MenuItem Command="{Binding CmdDelRow}" Header="删除" CommandParameter="worlds"/>
+                            <MenuItem Command="{Binding CmdClear}" Header="全部删除" CommandParameter="worlds"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+            </mah:MetroHeader>
+        </Grid>
+
+        <Grid Margin="5" Grid.Row="4">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <UniformGrid Columns="2">
+                
+                <Button Content="Set Out Dir" Command="{Binding SetOutDirCmd}"/>
+                <TextBox Text="{Binding OutDir}" IsReadOnly="True" VerticalContentAlignment="Center"/>
+
+                <TextBlock Text="File Name" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding CalibFileName}" IsReadOnly="False" VerticalContentAlignment="Center"/>
+
+                <!--<UniformGrid Columns="2">
+                    <Label Content="UseEigen"/>
+                    <CheckBox IsChecked="{Binding UseEigen}"></CheckBox>
+                </UniformGrid>-->
+               
+            </UniformGrid>
+            <Button Grid.Row="1" Content="Do Cali"  Command="{Binding DoCalibCmd}" Background="Green"/>
+        </Grid>
+    </Grid>
+</UserControl>
