@@ -50,7 +50,11 @@ namespace ALGTool.ViewModels
             set => SetProperty(ref _doPoint, value);
         }
 
-    
+
+        private Point2d _PixelOperatorPoint = new Point2d() { X = 0, Y = 0 };
+        public Point2d PixelOperatorPoint { get => _PixelOperatorPoint; set => SetProperty(ref _PixelOperatorPoint, value); }
+
+
         private ObservableCollection<Point2d> _pixels = new ObservableCollection<Point2d>();
         public ObservableCollection<Point2d> Pixels { get => _pixels; set => SetProperty(ref _pixels, value); }
 
@@ -110,7 +114,7 @@ namespace ALGTool.ViewModels
                 {
                     if (ps.Count > 0)
                     {
-                 
+
                         DoPoint = new Point2d();
                         DoPoint.X = ps[0].X;
                         DoPoint.Y = ps[0].Y;
@@ -215,9 +219,9 @@ namespace ALGTool.ViewModels
 
                 //var midP = new ALGLibNS.Point2d() { x = DoPoint.X, y = DoPoint.Y };
                 //WriteText(new List<Point2d>() { DoPoint }, Path.Combine(OutDir, "mid_point.txt"));
-                              
 
-                int ret = ALGLib.CalibCoordinateMap(ps, ws,  Path.Combine(OutDir, CalibFileName));
+
+                int ret = ALGLib.CalibCoordinateMap(ps, ws, Path.Combine(OutDir, CalibFileName));
 
                 if (ret != 0)
                 {
@@ -321,6 +325,125 @@ namespace ALGTool.ViewModels
 
             });
         }
+
+
+        private bool PointsValueOperator(string operatorType, Point2d opPoint, string type)
+        {
+            ObservableCollection<Point2d> temp;
+            if (type.ToLower().StartsWith("worlds"))
+            {
+                temp = Worlds;
+            }
+            else if (type.ToLower().StartsWith("pixels"))
+            {
+                temp = Pixels;
+            }
+            else
+            {
+                PublishEvent.BoxMessage(new MessageType("Error", $"error : points type:{type} not supported !"));
+                return false;
+            }
+
+
+            if (operatorType == "add")
+            {
+                for (int i = 0; i < temp.Count; i++)
+                    temp[i] = new Point2d() { X = temp[i].X + opPoint.X, Y = temp[i].Y + opPoint.Y };
+            }
+            else if (operatorType == "sub")
+            {
+                for (int i = 0; i < temp.Count; i++)
+                    temp[i] = new Point2d() { X = temp[i].X - opPoint.X, Y = temp[i].Y - opPoint.Y };
+            }
+            else if (operatorType == "multi")
+            {
+               for (int i = 0; i < temp.Count; i++)
+                    temp[i] = new Point2d() { X = temp[i].X * opPoint.X, Y = temp[i].Y * opPoint.Y };
+            }
+            else
+            {
+                PublishEvent.BoxMessage(new MessageType("Error", $"error : operatorType:{operatorType} not supported !"));
+                return false;
+            }
+
+
+            if (type.ToLower().StartsWith("worlds"))
+            {
+                Worlds = temp;
+            }
+            else if (type.ToLower().StartsWith("pixels"))
+            {
+                Pixels = temp;
+            }
+            else
+            {
+                PublishEvent.BoxMessage(new MessageType("Error", $"error : points type:{type} not supported !"));
+                return false;
+            }
+
+            return true;
+        }
+
+        public ICommand CmdPointValueAdd
+        {
+            get => new DelegateCommand<object>((obj) =>
+            {
+                string type = obj as string;
+
+                if (type == null || type == string.Empty)
+                {
+                    return;
+                }
+
+                
+                if (!PointsValueOperator("add",PixelOperatorPoint, type))
+                {
+                    //PublishEvent.BoxMessage()
+                }
+
+            });
+        }
+
+        public ICommand CmdPointValueSub
+        {
+            get => new DelegateCommand<object>((obj) =>
+            {
+                string type = obj as string;
+
+                if (type == null || type == string.Empty)
+                {
+                    return;
+                }
+
+
+                if (!PointsValueOperator("sub", PixelOperatorPoint, type))
+                {
+                    //PublishEvent.BoxMessage()
+                }
+
+            });
+        }
+
+        public ICommand CmdPointValueMulti
+        {
+            get => new DelegateCommand<object>((obj) =>
+            {
+                string type = obj as string;
+
+                if (type == null || type == string.Empty)
+                {
+                    return;
+                }
+
+
+                if (!PointsValueOperator("multi", PixelOperatorPoint, type))
+                {
+                    //PublishEvent.BoxMessage()
+                }
+
+            });
+        }
+
 
         private string _pixelsFile;
         public string PixelsFile
