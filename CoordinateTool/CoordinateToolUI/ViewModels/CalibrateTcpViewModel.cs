@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
-namespace ALGTool.ViewModels
+namespace CoordinateToolUI.ViewModels
 {
     public class CalibrateTcpViewModel : BindableBase
     {

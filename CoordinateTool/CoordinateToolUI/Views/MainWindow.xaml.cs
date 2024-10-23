@@ -3,7 +3,7 @@ using MahApps.Metro.Controls;
 
 using System.Text;
 
-namespace ALGTool.Views
+namespace CoordinateToolUI.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

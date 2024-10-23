@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace ALGTool.Views
+namespace CoordinateToolUI.Views
 {
     /// <summary>
     /// Interaction logic for CalibrateTcpView

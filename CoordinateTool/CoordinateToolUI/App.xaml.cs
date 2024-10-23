@@ -1,8 +1,8 @@
-﻿using ALGTool.Views;
+﻿using CoordinateToolUI.Views;
 using Prism.Ioc;
 using System.Windows;
 
-namespace ALGTool
+namespace CoordinateToolUI
 {
     /// <summary>
     /// Interaction logic for App.xaml

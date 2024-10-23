@@ -3,11 +3,11 @@
 namespace CoordinateToolUI.Views
 {
     /// <summary>
-    /// Interaction logic for CoordinateCalibrateView
+    /// Interaction logic for MapCoordinateView
     /// </summary>
-    public partial class CoordinateCalibrateView : UserControl
+    public partial class MapCoordinateView : UserControl
     {
-        public CoordinateCalibrateView()
+        public MapCoordinateView()
         {
             InitializeComponent();
         }

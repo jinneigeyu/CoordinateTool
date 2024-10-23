@@ -112,6 +112,7 @@
     <Compile Include="ViewModels\CalibrateTcpViewModel.cs" />
     <Compile Include="ViewModels\CoordinateCalibrateViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\MapCoordinateViewModel.cs" />
     <Compile Include="Views\CalibrateTcpView.xaml.cs">
       <DependentUpon>CalibrateTcpView.xaml</DependentUpon>
     </Compile>
@@ -125,6 +126,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Views\MapCoordinateView.xaml.cs">
+      <DependentUpon>MapCoordinateView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\CalibrateTcpView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -136,6 +140,10 @@
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MapCoordinateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

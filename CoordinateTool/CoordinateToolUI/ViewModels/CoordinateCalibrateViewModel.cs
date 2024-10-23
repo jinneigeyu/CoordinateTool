@@ -1,5 +1,5 @@
 ﻿using ALGLibNS;
-using ALGTool.Events;
+using CoordinateToolUI.Events;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
-namespace ALGTool.ViewModels
+namespace CoordinateToolUI.ViewModels
 {
     public class CoordinateCalibrateViewModel : BindableBase
     {
@@ -63,6 +63,9 @@ namespace ALGTool.ViewModels
         public ObservableCollection<Point2d> Worlds { get => _worlds; set => SetProperty(ref _worlds, value); }
 
 
+        private ObservableCollection<Point2d> _basePixels = new ObservableCollection<Point2d>();
+        private ObservableCollection<Point2d> _baseWorlds = new ObservableCollection<Point2d>();
+
         public ICommand LoadPixelsCmd
         {
             get => new DelegateCommand(() =>
@@ -71,11 +74,12 @@ namespace ALGTool.ViewModels
                 if (file == null)
                     return;
                 PixelsFile = file;
-                var ps = LoadPixels(file);
+                var ps = LoadPointsFile(file);
 
                 if (ps != null)
                 {
                     Pixels = new ObservableCollection<Point2d>(ps);
+                    _basePixels = new ObservableCollection<Point2d>(ps);
                 }
             });
         }
@@ -89,11 +93,12 @@ namespace ALGTool.ViewModels
                     return;
 
                 WorldsFile = file;
-                var ps = LoadPixels(file);
+                var ps = LoadPointsFile(file);
 
                 if (ps != null)
                 {
                     Worlds = new ObservableCollection<Point2d>(ps);
+                    _baseWorlds = new ObservableCollection<Point2d>(ps);
                 }
 
             });
@@ -108,7 +113,7 @@ namespace ALGTool.ViewModels
                 if (file == null)
                     return;
 
-                var ps = LoadPixels(file);
+                var ps = LoadPointsFile(file);
 
                 if (ps != null)
                 {
@@ -138,7 +143,7 @@ namespace ALGTool.ViewModels
             });
         }
 
-        private List<Point2d> LoadPixels(string filePath)
+        private List<Point2d> LoadPointsFile(string filePath)
         {
             List<Point2d> points = new List<Point2d>();
 
@@ -357,7 +362,7 @@ namespace ALGTool.ViewModels
             }
             else if (operatorType == "multi")
             {
-               for (int i = 0; i < temp.Count; i++)
+                for (int i = 0; i < temp.Count; i++)
                     temp[i] = new Point2d() { X = temp[i].X * opPoint.X, Y = temp[i].Y * opPoint.Y };
             }
             else
@@ -384,6 +389,37 @@ namespace ALGTool.ViewModels
             return true;
         }
 
+
+
+
+        public ICommand CmdReset
+        {
+            get => new DelegateCommand<object>((obj) =>
+            {
+                string type = obj as string;
+
+                if (type == null || type == string.Empty)
+                {
+                    return;
+                }
+
+
+                if (type.ToLower().StartsWith("worlds"))
+                {
+                    Worlds = _baseWorlds;  
+                }
+                else if (type.ToLower().StartsWith("pixels"))
+                {
+                    Pixels = _basePixels;
+                }
+                else
+                {
+                    PublishEvent.BoxMessage(new MessageType("Error", $"error : points type:{type} not supported !"));
+                }
+            });
+        }
+
+
         public ICommand CmdPointValueAdd
         {
             get => new DelegateCommand<object>((obj) =>
@@ -395,12 +431,8 @@ namespace ALGTool.ViewModels
                     return;
                 }
 
-                
-                if (!PointsValueOperator("add",PixelOperatorPoint, type))
-                {
-                    //PublishEvent.BoxMessage()
-                }
 
+                PointsValueOperator("add", PixelOperatorPoint, type);
             });
         }
 
@@ -416,11 +448,7 @@ namespace ALGTool.ViewModels
                 }
 
 
-                if (!PointsValueOperator("sub", PixelOperatorPoint, type))
-                {
-                    //PublishEvent.BoxMessage()
-                }
-
+                PointsValueOperator("sub", PixelOperatorPoint, type);
             });
         }
 
@@ -436,11 +464,7 @@ namespace ALGTool.ViewModels
                 }
 
 
-                if (!PointsValueOperator("multi", PixelOperatorPoint, type))
-                {
-                    //PublishEvent.BoxMessage()
-                }
-
+                PointsValueOperator("multi", PixelOperatorPoint, type);
             });
         }
 

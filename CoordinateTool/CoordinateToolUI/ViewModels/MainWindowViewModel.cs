@@ -1,9 +1,9 @@
-﻿using ALGTool.Events;
+﻿using CoordinateToolUI.Events;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Dialogs; // using Prism.Services.Dialogs; for donet
 
-namespace ALGTool.ViewModels
+namespace CoordinateToolUI.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
