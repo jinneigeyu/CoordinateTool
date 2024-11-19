@@ -24,18 +24,20 @@ int  CalibCoordinateMap(double* pixels, double* worlds, int n, const char* calib
 	//std::cout << "rigid \n";
 
 	Point2d mes = cv::Point2d(0, 0);
+	double r = 0;
 	map_pixels_2_worlds(calibFile, pixelsCV, calculate_test, false);
 	for (size_t i = 0; i < calculate_test.size(); i++)
 	{
 		cv::Point2d  error = calculate_test[i] - worldsCV[i];
-		std::cout << error.x << "\t" << error.y << "\n";
+		std::cout << "error [" + std::to_string(i) << "] " << error.x << "\t" << error.y << "\n";
 		mes += error;
+		r = error.x * error.x + error.y * error.y;
 	}
 
 	mes.x /= calculate_test.size();
 	mes.y /= calculate_test.size();
-	std::cout << mes.x << "\t" << mes.y << "\n";
-	std::cout << "\n";
+	std::cout << "mean error :" << mes.x << "\t" << mes.y << "\n";
+	std::cout << "RMS  :" << sqrt(r / calculate_test.size()) << "\n";
 	std::cout << "\n";
 	return ret;
 

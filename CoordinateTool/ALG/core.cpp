@@ -30,6 +30,59 @@ Eigen::MatrixXd getEigenMatrix(const cv::Mat& cvMatrix)
 }
 
 
+int load_coordinate_map_matrix(const std::string& filename, CoordinateMapMatrix& mapMatrix)
+{
+	try
+	{
+		cv::Mat cvMatrix, cvMatrixC1, cvMatrixC2;
+		cv::FileStorage fs(filename, cv::FileStorage::READ);
+		fs["R"] >> cvMatrix;
+		fs["C1"] >> cvMatrixC1;
+		fs["C2"] >> cvMatrixC2;
+
+		mapMatrix.R = getEigenMatrix(cvMatrix);
+		mapMatrix.c1 = getEigenMatrix(cvMatrixC1);
+		mapMatrix.c2 = getEigenMatrix(cvMatrixC2);
+
+		fs.release();
+	}
+	catch (const std::exception& ex)
+	{
+		std::cout << ex.what() << std::endl;
+		return -1;
+	}
+	
+
+	return 0;
+}
+
+int save_coordinate_map_matrix(const std::string& filename, const CoordinateMapMatrix& mapMatrix)
+{
+	try
+	{
+		// 将 Eigen Matrix 转换为 OpenCV Mat
+		cv::Mat cvMatrix = getCVMatrix(mapMatrix.R);
+		cv::Mat cvMatrixC1 = getCVMatrix(mapMatrix.c1);
+		cv::Mat cvMatrixC2 = getCVMatrix(mapMatrix.c2);
+
+
+		cv::FileStorage fs(filename, cv::FileStorage::WRITE);
+
+		fs << "R" << cvMatrix;
+		fs << "C1" << cvMatrixC1;
+		fs << "C2" << cvMatrixC2;
+
+		fs.release();
+	}
+	catch (const std::exception& ex)
+	{
+		std::cout << ex.what() << std::endl;
+
+		return -1;
+	}
+	return 0;
+}
+
 /// <summary>
 ///  solve    A=[p1 ... ]  B = [p2 ....]
 ///  Map A-> B
@@ -140,7 +193,7 @@ Eigen::Vector3d  calc_pixel_to_axis(
 	const Eigen::MatrixXd& R,
 	const  Eigen::Vector3d& c1,
 	const Eigen::Vector3d& c2,
-	bool inverse )
+	bool inverse)
 {
 
 	if (inverse)
@@ -168,7 +221,7 @@ std::vector < Eigen::Vector3d > calc_pixel_to_axis(
 	const Eigen::MatrixXd& R,
 	const  Eigen::Vector3d& c1,
 	const Eigen::Vector3d& c2,
-	bool inverse )
+	bool inverse)
 {
 
 	std::vector < Eigen::Vector3d > outputs;
@@ -239,29 +292,30 @@ int calib_pixel_2_world(const std::vector<cv::Point2d>& pixels, const std::vecto
 		pts2.push_back(Vector3d(world[i].x, world[i].y, 0));
 	}
 
-	Eigen::MatrixXd R;
-	Vector3d C1, C2;
+	//Eigen::MatrixXd R;
+	//Vector3d C1, C2;
 
-	int ret = calib_pixel_to_axis(pts1, pts2, R, C1, C2);
-	if (ret!=0)
+	CoordinateMapMatrix calibMatrix;
+	int ret = calib_pixel_to_axis(pts1, pts2, calibMatrix.R, calibMatrix.c1, calibMatrix.c2);
+	if (ret != 0)
 		return ret;
 
 
 	// 将 Eigen Matrix 转换为 OpenCV Mat
-	cv::Mat cvMatrix = getCVMatrix(R);
-	cv::Mat cvMatrixC1 = getCVMatrix(C1);
-	cv::Mat cvMatrixC2 = getCVMatrix(C2);
+	//cv::Mat cvMatrix = getCVMatrix(R);
+	//cv::Mat cvMatrixC1 = getCVMatrix(C1);
+	//cv::Mat cvMatrixC2 = getCVMatrix(C2);
 
 
-	cv::FileStorage fs(calibfile, cv::FileStorage::WRITE);
+	//cv::FileStorage fs(calibfile, cv::FileStorage::WRITE);
 
-	fs << "R" << cvMatrix;
-	fs << "C1" << cvMatrixC1;
-	fs << "C2" << cvMatrixC2;
+	//fs << "R" << cvMatrix;
+	//fs << "C1" << cvMatrixC1;
+	//fs << "C2" << cvMatrixC2;
 
-	fs.release();
+	//fs.release();
 
-	return 0;
+	return save_coordinate_map_matrix(calibfile, calibMatrix);
 }
 
 
@@ -300,18 +354,21 @@ int map_pixels_2_worlds(const std::string& calibfile, const std::vector<cv::Poin
 	if (!std::filesystem::exists(calibfile))
 		return -1;
 
+	CoordinateMapMatrix calibMatrix;
+	if( load_coordinate_map_matrix(calibfile, calibMatrix) != 0)
+		return -1;
 
-	cv::Mat cvMatrix, cvMatrixC1, cvMatrixC2;
+	//cv::Mat cvMatrix, cvMatrixC1, cvMatrixC2;
 
-	cv::FileStorage fs(calibfile, cv::FileStorage::READ);
+	//cv::FileStorage fs(calibfile, cv::FileStorage::READ);
 
-	fs["R"] >> cvMatrix;
-	fs["C1"] >> cvMatrixC1;
-	fs["C2"] >> cvMatrixC2;
+	//fs["R"] >> cvMatrix;
+	//fs["C1"] >> cvMatrixC1;
+	//fs["C2"] >> cvMatrixC2;
 
-	Eigen::MatrixXd R = getEigenMatrix(cvMatrix);
-	Eigen::MatrixXd C1 = getEigenMatrix(cvMatrixC1);
-	Eigen::MatrixXd C2 = getEigenMatrix(cvMatrixC2);
+	//Eigen::MatrixXd R = getEigenMatrix(cvMatrix);
+	//Eigen::MatrixXd C1 = getEigenMatrix(cvMatrixC1);
+	//Eigen::MatrixXd C2 = getEigenMatrix(cvMatrixC2);
 
 	if (pixels.size() == 1)
 	{
@@ -339,7 +396,7 @@ int map_pixels_2_worlds(const std::string& calibfile, const std::vector<cv::Poin
 		}
 
 
-		std::vector<Vector3d> outputs = calc_pixel_to_axis(inputs, R, C1, C2, inverse);
+		std::vector<Vector3d> outputs = calc_pixel_to_axis(inputs, calibMatrix.R, calibMatrix.c1, calibMatrix.c2, inverse);
 
 		auto worlds_test = std::vector<cv::Point2d>(pixels.size());
 

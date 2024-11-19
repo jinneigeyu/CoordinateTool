@@ -6,6 +6,17 @@ cv::Mat getCVMatrix(const Eigen::MatrixXd& eigenMatrix);
 
 Eigen::MatrixXd getEigenMatrix(const cv::Mat& cvMatrix);
 
+struct CoordinateMapMatrix
+{
+	Eigen::MatrixXd R;
+	Eigen::Vector3d c1;
+	Eigen::Vector3d c2;
+};
+
+int load_coordinate_map_matrix(const std::string& filename, CoordinateMapMatrix& mapMatrix);
+
+int save_coordinate_map_matrix(const std::string& filename, const CoordinateMapMatrix& mapMatrix);
+
 int  calib_pixel_to_axis(
 	const std::vector<Eigen::Vector3d>& pts1,
 	const  std::vector<Eigen::Vector3d>& pts2,
