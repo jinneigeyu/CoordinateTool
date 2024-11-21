@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CoordinateTool": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}

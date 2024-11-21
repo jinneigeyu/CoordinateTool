@@ -29,14 +29,14 @@ int  CalibCoordinateMap(double* pixels, double* worlds, int n, const char* calib
 	for (size_t i = 0; i < calculate_test.size(); i++)
 	{
 		cv::Point2d  error = calculate_test[i] - worldsCV[i];
-		std::cout << "error [" + std::to_string(i) << "] " << error.x << "\t" << error.y << "\n";
+		//std::cout << "error [" + std::to_string(i) << "] " << error.x << "\t" << error.y << "\n";
 		mes += error;
 		r = error.x * error.x + error.y * error.y;
 	}
 
 	mes.x /= calculate_test.size();
 	mes.y /= calculate_test.size();
-	std::cout << "mean error :" << mes.x << "\t" << mes.y << "\n";
+	//std::cout << "Mean Accuracy :" << mes.x << "\t" << mes.y << "\n";
 	std::cout << "RMS  :" << sqrt(r / calculate_test.size()) << "\n";
 	std::cout << "\n";
 	return ret;
