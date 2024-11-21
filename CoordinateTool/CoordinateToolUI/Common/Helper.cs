@@ -117,7 +117,7 @@ namespace Common.Helper
 
         }
 
-        public static string OpenSelectFolderDialog()
+        public static string OpenSelectFolderDialog(string root=null)
         {
 
             var folderDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -125,8 +125,12 @@ namespace Common.Helper
             // 设置对话框的属性
             folderDialog.Description = "请选择一个文件夹";
             folderDialog.RootFolder = Environment.SpecialFolder.Desktop;
-            folderDialog.ShowNewFolderButton = true;
+            if (root != null)
+            {
+                folderDialog.SelectedPath = root;
+            }
 
+            folderDialog.ShowNewFolderButton = true;
             // 打开文件夹选择对话框，并处理结果
             var result = folderDialog.ShowDialog();
 

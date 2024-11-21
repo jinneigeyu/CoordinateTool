@@ -36,7 +36,7 @@
                 </Border>
             </mah:MetroTabItem>
 
-            <mah:MetroTabItem Height="35" >
+            <mah:MetroTabItem Height="35"  Visibility="Hidden">
 
                 <mah:MetroTabItem.Header>
                     <TextBlock Text="Tcp Calibration" VerticalAlignment="Center" Foreground="White"/>

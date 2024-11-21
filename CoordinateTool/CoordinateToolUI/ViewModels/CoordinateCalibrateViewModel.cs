@@ -84,6 +84,8 @@ namespace CoordinateToolUI.ViewModels
             });
         }
 
+
+        private string worldFolder = null;
         public ICommand LoadWorldsCmd
         {
             get => new DelegateCommand<object>((obj) =>
@@ -91,6 +93,16 @@ namespace CoordinateToolUI.ViewModels
                 string file = Common.Helper.FileDialog.OpenDialog(null);
                 if (file == null)
                     return;
+
+                worldFolder = Path.GetDirectoryName(file);
+                if (!string.IsNullOrEmpty(worldFolder))
+                {
+                    OutDir = Path.Combine(worldFolder, "calib_result");
+                    if (!Directory.Exists(OutDir))
+                    {
+                        Directory.CreateDirectory(OutDir);
+                    }
+                }
 
                 WorldsFile = file;
                 var ps = LoadPointsFile(file);
@@ -133,7 +145,9 @@ namespace CoordinateToolUI.ViewModels
         {
             get => new DelegateCommand(() =>
             {
-                var selectedPath = Common.Helper.FileDialog.OpenSelectFolderDialog();
+                
+
+                var selectedPath = Common.Helper.FileDialog.OpenSelectFolderDialog(worldFolder);
 
                 if (string.IsNullOrEmpty(selectedPath))
                     PublishEvent.BoxMessage(new MessageType("Error", "User cancelled folder selection"));
