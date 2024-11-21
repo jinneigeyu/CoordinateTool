@@ -82,7 +82,7 @@
                         <TextBlock Text="Dst Points" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="LightSeaGreen" Margin="5,0,0,0" />
                     </DockPanel>
 
-                    <DataGrid Grid.Row="1" ItemsSource="{Binding Pixels}" CanUserSortColumns="False"
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding Dst}" CanUserSortColumns="False"
                         SelectedIndex="{Binding SelectIndex}"  
                               AutoGenerateColumns="False" 
                               CanUserAddRows="False" BorderThickness="1" BorderBrush="LightGray" >
@@ -108,8 +108,8 @@
             <StackPanel>
                 <TextBlock Text="Export:"></TextBlock>
                 <Rectangle Height="1" Margin="0 0 0 5" Fill="LightGray" />
-                <Button Content="Run" Background="Green" Command="{Binding CalcCommand}" />
-                <Button Content="Save to file" Background="Green" Command="{Binding CalcCommand}" />
+                <Button Content="Calculate" Background="Green" Command="{Binding CalcCommand}" />
+                <Button Content="Save Dst" Background="Green" Command="{Binding SaveDstCommand}" />
 
             </StackPanel>
         </Border>

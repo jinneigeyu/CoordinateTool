@@ -1,8 +1,7 @@
-﻿using ALGLibNS;
+﻿using CoordinateToolDotNet.Common;
 using CoordinateToolUI.Events;
 using Prism.Commands;
 using Prism.Mvvm;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -18,15 +17,7 @@ namespace CoordinateToolUI.ViewModels
 
         }
 
-        public class Point2d : BindableBase
-        {
-            private double _x;
-            public double X { get => _x; set => SetProperty(ref _x, value); }
 
-            private double _y;
-
-            public double Y { get => _y; set => SetProperty(ref _y, value); }
-        }
 
 
         private bool? _useEigen = true;
@@ -43,28 +34,28 @@ namespace CoordinateToolUI.ViewModels
             set => SetProperty(ref _selectIndex, value);
         }
 
-        private Point2d _doPoint = new Point2d();
-        public Point2d DoPoint
+        private Point2dCS _doPoint = new Point2dCS();
+        public Point2dCS DoPoint
         {
             get => _doPoint;
             set => SetProperty(ref _doPoint, value);
         }
 
 
-        private Point2d _PixelOperatorPoint = new Point2d() { X = 0, Y = 0 };
-        public Point2d PixelOperatorPoint { get => _PixelOperatorPoint; set => SetProperty(ref _PixelOperatorPoint, value); }
+        private Point2dCS _PixelOperatorPoint = new Point2dCS() { X = 0, Y = 0 };
+        public Point2dCS PixelOperatorPoint { get => _PixelOperatorPoint; set => SetProperty(ref _PixelOperatorPoint, value); }
 
 
-        private ObservableCollection<Point2d> _pixels = new ObservableCollection<Point2d>();
-        public ObservableCollection<Point2d> Pixels { get => _pixels; set => SetProperty(ref _pixels, value); }
+        private ObservableCollection<Point2dCS> _pixels = new ObservableCollection<Point2dCS>();
+        public ObservableCollection<Point2dCS> Pixels { get => _pixels; set => SetProperty(ref _pixels, value); }
 
-        private ObservableCollection<Point2d> _worlds = new ObservableCollection<Point2d>();
+        private ObservableCollection<Point2dCS> _worlds = new ObservableCollection<Point2dCS>();
 
-        public ObservableCollection<Point2d> Worlds { get => _worlds; set => SetProperty(ref _worlds, value); }
+        public ObservableCollection<Point2dCS> Worlds { get => _worlds; set => SetProperty(ref _worlds, value); }
 
 
-        private ObservableCollection<Point2d> _basePixels = new ObservableCollection<Point2d>();
-        private ObservableCollection<Point2d> _baseWorlds = new ObservableCollection<Point2d>();
+        private ObservableCollection<Point2dCS> _basePixels = new ObservableCollection<Point2dCS>();
+        private ObservableCollection<Point2dCS> _baseWorlds = new ObservableCollection<Point2dCS>();
 
         public ICommand LoadPixelsCmd
         {
@@ -74,12 +65,12 @@ namespace CoordinateToolUI.ViewModels
                 if (file == null)
                     return;
                 PixelsFile = file;
-                var ps = LoadPointsFile(file);
+                var ps = Tool.LoadPointsFile(file);
 
                 if (ps != null)
                 {
-                    Pixels = new ObservableCollection<Point2d>(ps);
-                    _basePixels = new ObservableCollection<Point2d>(ps);
+                    Pixels = new ObservableCollection<Point2dCS>(ps);
+                    _basePixels = new ObservableCollection<Point2dCS>(ps);
                 }
             });
         }
@@ -105,12 +96,12 @@ namespace CoordinateToolUI.ViewModels
                 }
 
                 WorldsFile = file;
-                var ps = LoadPointsFile(file);
+                var ps =Tool. LoadPointsFile(file);
 
                 if (ps != null)
                 {
-                    Worlds = new ObservableCollection<Point2d>(ps);
-                    _baseWorlds = new ObservableCollection<Point2d>(ps);
+                    Worlds = new ObservableCollection<Point2dCS>(ps);
+                    _baseWorlds = new ObservableCollection<Point2dCS>(ps);
                 }
 
             });
@@ -125,14 +116,14 @@ namespace CoordinateToolUI.ViewModels
                 if (file == null)
                     return;
 
-                var ps = LoadPointsFile(file);
+                var ps = Tool.LoadPointsFile(file);
 
                 if (ps != null)
                 {
                     if (ps.Count > 0)
                     {
 
-                        DoPoint = new Point2d();
+                        DoPoint = new Point2dCS();
                         DoPoint.X = ps[0].X;
                         DoPoint.Y = ps[0].Y;
                     }
@@ -157,41 +148,7 @@ namespace CoordinateToolUI.ViewModels
             });
         }
 
-        private List<Point2d> LoadPointsFile(string filePath)
-        {
-            List<Point2d> points = new List<Point2d>();
-
-            try
-            {
-                using (StreamReader reader = new StreamReader(filePath))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        // 假设文件中每行包含两个数字，用空格或逗号分隔
-                        string[] parts = line.Split(new string[] { " ", ",", "\t" }, StringSplitOptions.RemoveEmptyEntries);
-
-                        if (parts.Length >= 2 && double.TryParse(parts[0], out double x) && double.TryParse(parts[1], out double y))
-                        {
-                            Point2d point = new Point2d { X = x, Y = y };
-                            points.Add(point);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Skipping invalid line: {line}");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error reading file: {ex.Message}");
-            }
-
-            return points;
-        }
-
-        private void WriteText(List<Point2d> data, string fileName)
+        private void WriteText(List<Point2dCS> data, string fileName)
         {
             var sw = File.CreateText(fileName);
             for (int i = 0; i < data.Count; i++)
@@ -236,11 +193,11 @@ namespace CoordinateToolUI.ViewModels
 
                 Directory.CreateDirectory(OutDir);
 
-                //var midP = new ALGLibNS.Point2d() { x = DoPoint.X, y = DoPoint.Y };
-                //WriteText(new List<Point2d>() { DoPoint }, Path.Combine(OutDir, "mid_point.txt"));
+                //var midP = new ALGLibNS.Point2dCS() { x = DoPoint.X, y = DoPoint.Y };
+                //WriteText(new List<Point2dCS>() { DoPoint }, Path.Combine(OutDir, "mid_point.txt"));
 
 
-                int ret = ALGLib.CalibCoordinateMap(ps, ws, Path.Combine(OutDir, CalibFileName));
+                int ret = ALGLibNS.ALGLib.CalibCoordinateMap(ps, ws, Path.Combine(OutDir, CalibFileName));
 
                 if (ret != 0)
                 {
@@ -268,11 +225,11 @@ namespace CoordinateToolUI.ViewModels
 
                 if (type.ToLower().StartsWith("worlds"))
                 {
-                    Worlds.Add(new Point2d() { X = 0, Y = 0 });
+                    Worlds.Add(new Point2dCS() { X = 0, Y = 0 });
                 }
                 else if (type.ToLower().StartsWith("pixels"))
                 {
-                    Pixels.Add(new Point2d() { X = 0, Y = 0 });
+                    Pixels.Add(new Point2dCS() { X = 0, Y = 0 });
 
                 }
                 else
@@ -346,9 +303,9 @@ namespace CoordinateToolUI.ViewModels
         }
 
 
-        private bool PointsValueOperator(string operatorType, Point2d opPoint, string type)
+        private bool PointsValueOperator(string operatorType, Point2dCS opPoint, string type)
         {
-            ObservableCollection<Point2d> temp;
+            ObservableCollection<Point2dCS> temp;
             if (type.ToLower().StartsWith("worlds"))
             {
                 temp = Worlds;
@@ -367,17 +324,17 @@ namespace CoordinateToolUI.ViewModels
             if (operatorType == "add")
             {
                 for (int i = 0; i < temp.Count; i++)
-                    temp[i] = new Point2d() { X = temp[i].X + opPoint.X, Y = temp[i].Y + opPoint.Y };
+                    temp[i] = new Point2dCS() { X = temp[i].X + opPoint.X, Y = temp[i].Y + opPoint.Y };
             }
             else if (operatorType == "sub")
             {
                 for (int i = 0; i < temp.Count; i++)
-                    temp[i] = new Point2d() { X = temp[i].X - opPoint.X, Y = temp[i].Y - opPoint.Y };
+                    temp[i] = new Point2dCS() { X = temp[i].X - opPoint.X, Y = temp[i].Y - opPoint.Y };
             }
             else if (operatorType == "multi")
             {
                 for (int i = 0; i < temp.Count; i++)
-                    temp[i] = new Point2d() { X = temp[i].X * opPoint.X, Y = temp[i].Y * opPoint.Y };
+                    temp[i] = new Point2dCS() { X = temp[i].X * opPoint.X, Y = temp[i].Y * opPoint.Y };
             }
             else
             {

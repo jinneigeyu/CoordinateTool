@@ -21,6 +21,11 @@ namespace CoordinateToolUI.Events
             EventAggregator.GetEvent<MessageEvent>().Publish(message);
         }
 
+        public static void SendMessage(string message)
+        {
+            EventAggregator.GetEvent<StringEvent>().Publish(message);
+        }
+
     }
 
     public class MessageType
@@ -42,6 +47,10 @@ namespace CoordinateToolUI.Events
 
 
 
+    public  class StringEvent : PubSubEvent<string>
+    {        
+    }
 
+   
 
 }

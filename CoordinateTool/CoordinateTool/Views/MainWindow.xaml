@@ -36,6 +36,17 @@
                 </Border>
             </mah:MetroTabItem>
 
+            <mah:MetroTabItem Height="35" >
+
+                <mah:MetroTabItem.Header>
+                    <TextBlock Text="Coordinate Map" VerticalAlignment="Center" Foreground="White"/>
+                </mah:MetroTabItem.Header>
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <v:MapCoordinateView></v:MapCoordinateView>
+                </Border>
+            </mah:MetroTabItem>
+            
+
             <mah:MetroTabItem Height="35"  Visibility="Hidden">
 
                 <mah:MetroTabItem.Header>
@@ -47,7 +58,7 @@
             </mah:MetroTabItem>
             
         </mah:MetroTabControl>
-        <!--<ContentControl prism:RegionManager.RegionName="ContentRegion" />-->
+      
 
 
     </Grid>
