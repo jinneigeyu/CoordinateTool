@@ -16,7 +16,7 @@
              >
 
 
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -27,15 +27,15 @@
 
         <Grid Margin="5">
             <!--<mah:MetroHeader DockPanel.Dock="Top" Header="Settings"  >-->
-                <UniformGrid Columns="2" Rows="2" >
-                    
-                    <Button Height="35" Content="Load Pixels" Command="{Binding LoadPixelsCmd}"/>
-                    <TextBox Text="{Binding PixelsFile}" IsReadOnly="True" VerticalContentAlignment="Center"/>
+            <UniformGrid Columns="2" Rows="2" >
 
-                    <Button Height="35" Content="Load Worlds" Command="{Binding LoadWorldsCmd}"/>
-                    <TextBox Text="{Binding WorldsFile}" IsReadOnly="True" VerticalContentAlignment="Center"/>
+                <Button Height="35" Content="Load Pixels" Command="{Binding LoadPixelsCmd}"/>
+                <TextBox Text="{Binding PixelsFile}" IsReadOnly="True" VerticalContentAlignment="Center"/>
 
-                    <!--<Button Content="Load MidPoint" Command="{Binding LoadMidPointCmd}" />
+                <Button Height="35" Content="Load Worlds" Command="{Binding LoadWorldsCmd}"/>
+                <TextBox Text="{Binding WorldsFile}" IsReadOnly="True" VerticalContentAlignment="Center"/>
+
+                <!--<Button Content="Load MidPoint" Command="{Binding LoadMidPointCmd}" />
                     
                     <UniformGrid Columns="2">
                         <TextBlock Text="MidPoint.X" IsEnabled="False" HorizontalAlignment="Center" VerticalAlignment="Top"/>
@@ -45,7 +45,7 @@
                     </UniformGrid>-->
 
 
-                </UniformGrid>
+            </UniformGrid>
             <!--</mah:MetroHeader>-->
         </Grid>
 
@@ -55,71 +55,93 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <mah:MetroHeader DockPanel.Dock="Top" Header="Pixels" FontWeight="Bold" Foreground="LightGreen"  BorderBrush="LightGray">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                <DataGrid ItemsSource="{Binding Pixels}" CanUserSortColumns="False"
-                          SelectedIndex="{Binding SelectIndex}"  AutoGenerateColumns="False" CanUserAddRows="False" BorderThickness="1" BorderBrush="LightGray" >
-                    <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding X,StringFormat={}{0:F3}}" Header="X" Width="*"/>
-                            <DataGridTextColumn Binding="{Binding Y,StringFormat={}{0:F3}}" Header="Y"  Width="*"/>
-                    </DataGrid.Columns>
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding CmdAddRow}" Header="添加行"  CommandParameter="pixels"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-                            <MenuItem Command="{Binding CmdDelRow}" Header="删除行"  CommandParameter="pixels"/>
-                            <MenuItem Command="{Binding CmdClear}" Header="全部删除" CommandParameter="pixels"/>
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                </DataGrid>
-
-                    <Grid Grid.Column="1">
-                        <UniformGrid Rows="2">
-                            <UniformGrid Columns="3">
-                                <Button Content="Mid Point :" ></Button>
-                                <TextBox Text="{Binding PixelOperatorPoint.X ,StringFormat={}{0:F3}}" IsReadOnly="False" VerticalContentAlignment="Center"/>
-                                <TextBox Text="{Binding PixelOperatorPoint.Y ,StringFormat={}{0:F3}}" IsReadOnly="False" VerticalContentAlignment="Center"/>
-                            </UniformGrid>
-                            
-                            <UniformGrid Columns="4">
-                                <Button Content="Reset" Command="{Binding CmdReset}" CommandParameter="pixels" Background="SlateGray" Foreground="Black" FontSize="15"></Button>
-
-                                <Button Content="+" Command="{Binding CmdPointValueAdd}" CommandParameter="pixels" Background="LimeGreen" Foreground="Black" FontSize="30"></Button>
-                                <Button Content="-" Command="{Binding CmdPointValueSub}" CommandParameter="pixels" Background="PaleVioletRed" Foreground="Black" FontSize="30"></Button>
-                                <Button Content="x" Command="{Binding CmdPointValueMulti}" CommandParameter="pixels" Background="YellowGreen" Foreground="Black" FontSize="15"></Button>
-                                <!--<Button Content="Zero" Command="{Binding CmdPointValueClear}" CommandParameter="pixel"   Background="Gray"></Button>-->
-                            </UniformGrid>
-                        </UniformGrid>
-                    </Grid>
-                </Grid>
-            </mah:MetroHeader>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Text="Pixels Num: " FontWeight="Bold" Foreground="LightGreen" FontSize="16" ></TextBlock>
+                <TextBlock Text="{Binding Pixels.Count}" FontWeight="Bold"  FontSize="16"></TextBlock>
+            </StackPanel>
+            
            
+                                
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="73*"/>
+                            <ColumnDefinition Width="296*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <DataGrid ItemsSource="{Binding Pixels}" CanUserSortColumns="False"
+                          SelectedIndex="{Binding SelectIndex}"  AutoGenerateColumns="False" CanUserAddRows="False" BorderThickness="1" BorderBrush="LightGray" Grid.ColumnSpan="2" >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding X,StringFormat={}{0:F3}}" Header="X" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Y,StringFormat={}{0:F3}}" Header="Y"  Width="*"/>
+                            </DataGrid.Columns>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding CmdAddRow}" Header="添加行"  CommandParameter="pixels"/>
+
+                                    <MenuItem Command="{Binding CmdDelRow}" Header="删除行"  CommandParameter="pixels"/>
+                                    <MenuItem Command="{Binding CmdClear}" Header="全部删除" CommandParameter="pixels"/>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+                        </DataGrid>
+
+                        <Grid Grid.Column="2">
+                            <UniformGrid Rows="2">
+                                <UniformGrid Columns="3">
+                                    <Button Content="Mid Point :" ></Button>
+                                    <TextBox Text="{Binding PixelOperatorPoint.X ,StringFormat={}{0:F3}}" IsReadOnly="False" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding PixelOperatorPoint.Y ,StringFormat={}{0:F3}}" IsReadOnly="False" VerticalContentAlignment="Center"/>
+                                </UniformGrid>
+
+                                <UniformGrid Columns="4">
+                                    <Button Content="Reset" Command="{Binding CmdReset}" CommandParameter="pixels" Background="SlateGray" Foreground="Black" FontSize="15"></Button>
+
+                                    <Button Content="+" Command="{Binding CmdPointValueAdd}" CommandParameter="pixels" Background="LimeGreen" Foreground="Black" FontSize="30"></Button>
+                                    <Button Content="-" Command="{Binding CmdPointValueSub}" CommandParameter="pixels" Background="PaleVioletRed" Foreground="Black" FontSize="30"></Button>
+                                    <Button Content="x" Command="{Binding CmdPointValueMulti}" CommandParameter="pixels" Background="YellowGreen" Foreground="Black" FontSize="15"></Button>
+                                    <!--<Button Content="Zero" Command="{Binding CmdPointValueClear}" CommandParameter="pixel"   Background="Gray"></Button>-->
+                                </UniformGrid>
+                            </UniformGrid>
+                        </Grid>
+                    </Grid>
+              
+            
+            
         </Grid>
 
         <Grid Margin="5" Grid.Row="2">
-            <mah:MetroHeader DockPanel.Dock="Top" Header="Worlds" FontWeight="Bold" Foreground="LightGreen">
-                <Grid  >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Worlds Num: " FontWeight="Bold" Foreground="LightGreen" FontSize="16"></TextBlock>
+                <TextBlock Text="{Binding Worlds.Count}" FontWeight="Bold" FontSize="16"></TextBlock>
+            </StackPanel>
+            
+                <Grid Grid.Row="1"> 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
                     <DataGrid ItemsSource="{Binding Worlds}" SelectedIndex="{Binding SelectIndex}" CanUserSortColumns="False" AutoGenerateColumns="False" CanUserAddRows="False"  BorderThickness="1" BorderBrush="LightGray">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding X}" Header="X" Width="*"/>
-                        <DataGridTextColumn Binding="{Binding Y}" Header="Y"  Width="*"/>
-                    </DataGrid.Columns>
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding CmdAddRow}" Header="添加行" CommandParameter="worlds"/>
-                            <MenuItem Command="{Binding CmdDelRow}" Header="删除" CommandParameter="worlds"/>
-                            <MenuItem Command="{Binding CmdClear}" Header="全部删除" CommandParameter="worlds"/>
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                </DataGrid>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding X}" Header="X" Width="*"/>
+                            <DataGridTextColumn Binding="{Binding Y}" Header="Y"  Width="*"/>
+                        </DataGrid.Columns>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding CmdAddRow}" Header="添加行" CommandParameter="worlds"/>
+                                <MenuItem Command="{Binding CmdDelRow}" Header="删除" CommandParameter="worlds"/>
+                                <MenuItem Command="{Binding CmdClear}" Header="全部删除" CommandParameter="worlds"/>
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                    </DataGrid>
                     <Grid Grid.Column="1">
                         <UniformGrid Rows="2">
                             <UniformGrid Columns="3">
@@ -138,7 +160,7 @@
                         </UniformGrid>
                     </Grid>
                 </Grid>
-            </mah:MetroHeader>
+          
         </Grid>
 
         <Grid Margin="5" Grid.Row="4">
@@ -148,7 +170,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <UniformGrid Columns="2">
-                
+
                 <Button Content="Set Out Dir" Command="{Binding SetOutDirCmd}"/>
                 <TextBox Text="{Binding OutDir}" IsReadOnly="True" VerticalContentAlignment="Center"/>
 
@@ -159,7 +181,7 @@
                     <Label Content="UseEigen"/>
                     <CheckBox IsChecked="{Binding UseEigen}"></CheckBox>
                 </UniformGrid>-->
-               
+
             </UniformGrid>
             <Button Height="45" Grid.Row="1" Content="Do Cali"  Command="{Binding DoCalibCmd}" Background="Green"/>
         </Grid>

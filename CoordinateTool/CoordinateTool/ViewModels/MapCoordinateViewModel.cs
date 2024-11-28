@@ -30,8 +30,7 @@ namespace CoordinateToolUI.ViewModels
 
             _ea.GetEvent<StringEvent>().Subscribe(e =>
             {
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
+               
                     var s = e;
 
                     if (!string.IsNullOrEmpty(s))
@@ -40,7 +39,6 @@ namespace CoordinateToolUI.ViewModels
                         try
                         {
                             MapFile = s;
-                            LoadMapFileCommand.Execute(s);
                         }
                         catch (Exception )
                         {
@@ -48,7 +46,6 @@ namespace CoordinateToolUI.ViewModels
                         }
                        
                     }
-                });
             });
 
         }

@@ -44,7 +44,7 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Row="0" FlowDirection="LeftToRight">
-                        <TextBlock Text="Src Points" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="LightSeaGreen" Margin="5,0,0,0" />
+                        <TextBlock Text="Src Points" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Foreground="LightGreen" FontSize="16" Margin="5,0,0,0" />
                     </DockPanel>
                    
                     <DataGrid Grid.Row="1" ItemsSource="{Binding Pixels}" CanUserSortColumns="False"
@@ -79,7 +79,7 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Row="0" FlowDirection="LeftToRight">
-                        <TextBlock Text="Dst Points" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="LightSeaGreen" Margin="5,0,0,0" />
+                        <TextBlock Text="Dst Points" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Foreground="LightGreen" FontSize="16" Margin="5,0,0,0" />
                     </DockPanel>
 
                     <DataGrid Grid.Row="1" ItemsSource="{Binding Dst}" CanUserSortColumns="False"
@@ -106,10 +106,15 @@
 
         <Border Grid.Row="2">
             <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Points Num: "></TextBlock>
+                    <TextBlock Text="{Binding Pixels.Count}"></TextBlock>
+                </StackPanel>
+
                 <TextBlock Text="Export:"></TextBlock>
                 <Rectangle Height="1" Margin="0 0 0 5" Fill="LightGray" />
-                <Button Content="Calculate" Background="Green" Command="{Binding CalcCommand}" />
-                <Button Content="Save Dst" Background="Green" Command="{Binding SaveDstCommand}" />
+                <Button Content="Calculate" Background="Green" Command="{Binding CalcCommand}" FontSize="16"/>
+                <Button Content="Save Dst" Background="#FF8E9E33" Command="{Binding SaveDstCommand}" FontSize="16"/>
 
             </StackPanel>
         </Border>

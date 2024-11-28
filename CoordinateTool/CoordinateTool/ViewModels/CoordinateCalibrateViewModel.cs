@@ -208,6 +208,8 @@ namespace CoordinateToolUI.ViewModels
                 WriteText(Pixels.ToList(), Path.Combine(OutDir, "pixels.txt"));
                 WriteText(Worlds.ToList(), Path.Combine(OutDir, "worlds.txt"));
                 PublishEvent.BoxMessage(new MessageType("Success", "Calibration successful"));
+
+                PublishEvent.SendMessage(Path.Combine(OutDir, CalibFileName)); // send calibration file path to map vm
             });
         }
 
