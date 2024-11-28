@@ -1,5 +1,12 @@
 # CoordinateTool
-a tool of calibration for c1 to c2 . (2d) , and transform c1 to c2 . (2d)
+a tool of calibration for c1 to c2 . (2d) , and transform c1 to c2 . (2d) 。  
+result is same as halcon 
+``` 
+vector_to_hom_mat2d (Px, Py, Qx, Qy, HomMat2D)
+affine_trans_point_2d (HomMat2D, Px, Py, Qx1, Qy1)
+dffx := Qx1-Qx
+dffy := Qy1-Qy
+```
 
 ## Dependence
 * opencv
