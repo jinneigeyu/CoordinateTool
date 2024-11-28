@@ -292,28 +292,10 @@ int calib_pixel_2_world(const std::vector<cv::Point2d>& pixels, const std::vecto
 		pts2.push_back(Vector3d(world[i].x, world[i].y, 0));
 	}
 
-	//Eigen::MatrixXd R;
-	//Vector3d C1, C2;
-
 	CoordinateMapMatrix calibMatrix;
 	int ret = calib_pixel_to_axis(pts1, pts2, calibMatrix.R, calibMatrix.c1, calibMatrix.c2);
 	if (ret != 0)
 		return ret;
-
-
-	// ½« Eigen Matrix ×ª»»Îª OpenCV Mat
-	//cv::Mat cvMatrix = getCVMatrix(R);
-	//cv::Mat cvMatrixC1 = getCVMatrix(C1);
-	//cv::Mat cvMatrixC2 = getCVMatrix(C2);
-
-
-	//cv::FileStorage fs(calibfile, cv::FileStorage::WRITE);
-
-	//fs << "R" << cvMatrix;
-	//fs << "C1" << cvMatrixC1;
-	//fs << "C2" << cvMatrixC2;
-
-	//fs.release();
 
 	return save_coordinate_map_matrix(calibfile, calibMatrix);
 }
@@ -325,9 +307,7 @@ int map_pixel_2_world(const std::string& calibfile, const cv::Point2d& pixel, cv
 	if (!std::filesystem::exists(calibfile))
 		return -1;
 
-
 	cv::Mat cvMatrix, cvMatrixC1, cvMatrixC2;
-
 	cv::FileStorage fs(calibfile, cv::FileStorage::READ);
 
 	fs["R"] >> cvMatrix;
@@ -337,8 +317,6 @@ int map_pixel_2_world(const std::string& calibfile, const cv::Point2d& pixel, cv
 	Eigen::MatrixXd R = getEigenMatrix(cvMatrix);
 	Eigen::MatrixXd C1 = getEigenMatrix(cvMatrixC1);
 	Eigen::MatrixXd C2 = getEigenMatrix(cvMatrixC2);
-
-
 
 	Eigen::Vector3d w_vec = calc_pixel_to_axis(Vector3d(pixel.x, pixel.y, 0), R, C1, C2, inverse);
 
@@ -358,18 +336,6 @@ int map_pixels_2_worlds(const std::string& calibfile, const std::vector<cv::Poin
 	if( load_coordinate_map_matrix(calibfile, calibMatrix) != 0)
 		return -1;
 
-	//cv::Mat cvMatrix, cvMatrixC1, cvMatrixC2;
-
-	//cv::FileStorage fs(calibfile, cv::FileStorage::READ);
-
-	//fs["R"] >> cvMatrix;
-	//fs["C1"] >> cvMatrixC1;
-	//fs["C2"] >> cvMatrixC2;
-
-	//Eigen::MatrixXd R = getEigenMatrix(cvMatrix);
-	//Eigen::MatrixXd C1 = getEigenMatrix(cvMatrixC1);
-	//Eigen::MatrixXd C2 = getEigenMatrix(cvMatrixC2);
-
 	if (pixels.size() == 1)
 	{
 		worlds = std::vector<cv::Point2d>(1);
@@ -378,40 +344,16 @@ int map_pixels_2_worlds(const std::string& calibfile, const std::vector<cv::Poin
 	}
 	else
 	{
-
-
 		worlds = std::vector<cv::Point2d>(pixels.size());
-
-		for (size_t i = 0; i < pixels.size(); i++)
-		{
-			map_pixel_2_world(calibfile, pixels[i], worlds[i], inverse);
-		}
-
-
 
 		std::vector<Vector3d> inputs;
 		for (size_t i = 0; i < pixels.size(); i++)
-		{
 			inputs.push_back(Vector3d(pixels[i].x, pixels[i].y, 0));
-		}
-
 
 		std::vector<Vector3d> outputs = calc_pixel_to_axis(inputs, calibMatrix.R, calibMatrix.c1, calibMatrix.c2, inverse);
-
-		auto worlds_test = std::vector<cv::Point2d>(pixels.size());
-
+	
 		for (size_t i = 0; i < pixels.size(); i++)
-		{
-			worlds_test[i] = cv::Point2d(outputs[i].x(), outputs[i].y());
-
-
-			if (worlds_test[i] != worlds[i])
-			{
-				return -1;
-			}
-		}
-
-
+			worlds[i] = cv::Point2d(outputs[i].x(), outputs[i].y());	
 
 	}
 
