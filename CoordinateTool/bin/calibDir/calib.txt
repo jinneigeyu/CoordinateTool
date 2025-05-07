@@ -1,0 +1,17 @@
+%YAML:1.0
+---
+R: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 1., -1.1102230246251565e-16, 0., 0., 1., 0., 0., 0., 0. ]
+C1: !!opencv-matrix
+   rows: 3
+   cols: 1
+   dt: d
+   data: [ 2., 1., 0. ]
+C2: !!opencv-matrix
+   rows: 3
+   cols: 1
+   dt: d
+   data: [ 2., 1., 0. ]
