@@ -21,8 +21,6 @@ int  CalibCoordinateMap(double* pixels, double* worlds, int n, const char* calib
 	}
 
 	std::vector<cv::Point2d>  calculate_test;
-	//std::cout << "rigid \n";
-
 	Point2d mes = cv::Point2d(0, 0);
 	double r = 0;
 	map_pixels_2_worlds(calibFile, pixelsCV, calculate_test, false);
@@ -36,9 +34,23 @@ int  CalibCoordinateMap(double* pixels, double* worlds, int n, const char* calib
 
 	mes.x /= calculate_test.size();
 	mes.y /= calculate_test.size();
-	//std::cout << "Mean Accuracy :" << mes.x << "\t" << mes.y << "\n";
-	std::cout << "RMS  :" << sqrt(r / calculate_test.size()) << "\n";
-	std::cout << "\n";
+	double rms = sqrt(r / calculate_test.size());
+	std::cout << "RMS  :" << rms << "\n";
+
+	map_pixels_2_worlds(calibFile, { cv::Point2d(1,0),cv::Point2d(0,1) }, calculate_test, false);
+
+
+
+	cv::FileStorage fs(calibFile, cv::FileStorage::APPEND);
+
+	cv::Mat matx = (cv::Mat_<float>(1, 2) << calculate_test[0].x, calculate_test[0].y);
+	cv::Mat maty = (cv::Mat_<float>(1, 2) << calculate_test[1].x, calculate_test[1].y);
+	fs << "RMS" << rms;
+	fs << "X_Pixel2World" << calculate_test[0];
+	fs << "Y_Pixel2World" << calculate_test[1];
+
+	fs.release();
+
 	return ret;
 
 	/*    使用 opencv 的 仿射变换 刚体变换都很差。根本用不了

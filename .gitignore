@@ -22,3 +22,4 @@ obj/
 CoordinateTool/packages/
 CoordinateTool/bin/de/
 CoordinateTool/CoordinateToolUI/publish/
+CoordinateTool/bin/calibDir/calib_result/
