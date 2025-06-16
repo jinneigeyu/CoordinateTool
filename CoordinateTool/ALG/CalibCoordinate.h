@@ -1,6 +1,8 @@
 #pragma once
 #include <opencv2/opencv.hpp>
-#include "core.h"
+#include <Eigen/Eigen>
+
+
 
 #ifdef EXPORTING_DLL
 #define DLLEXPORT __declspec(dllexport)
@@ -9,7 +11,22 @@
 #endif
 
 
-extern "C"
+
+
+
+// For cpp
+
+
+int calib_pixel_2_world(const std::vector<cv::Point2d>& pixels, const std::vector<cv::Point2d> world, std::string calibfile);
+
+int map_pixel_2_world(const std::string& calibfile, const cv::Point2d& pixel, cv::Point2d& world, bool inverse);
+
+int map_pixels_2_worlds(const std::string& calibfile, const std::vector<cv::Point2d>& pixels, std::vector<cv::Point2d>& worlds, bool inverse);
+
+
+
+// for c sharp
+extern "C" 
 {
 
 
