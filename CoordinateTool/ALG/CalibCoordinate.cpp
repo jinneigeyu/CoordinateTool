@@ -217,6 +217,33 @@ int  calib_pixel_to_axis(
 }
 
 
+#include <Eigen/Dense>
+
+Eigen::MatrixXd pinv(const Eigen::MatrixXd& A, double epsilon = 1e-6) {
+	// 进行奇异值分解
+	Eigen::JacobiSVD<Eigen::MatrixXd> svd(
+		A,
+		Eigen::ComputeFullU | Eigen::ComputeFullV
+	);
+
+	// 获取奇异值向量
+	Eigen::VectorXd singularValues = svd.singularValues();
+	Eigen::MatrixXd singularValuesInv = Eigen::MatrixXd::Zero(
+		A.cols(),
+		A.rows()
+	);
+
+	// 对非零奇异值取倒数（基于阈值 epsilon）
+	for (int i = 0; i < singularValues.size(); ++i) {
+		if (singularValues(i) > epsilon) {
+			singularValuesInv(i, i) = 1.0 / singularValues(i);
+		}
+	}
+
+	// 计算伪逆: V * Σ^+ * U^T
+	return svd.matrixV() * singularValuesInv * svd.matrixU().transpose();
+}
+
 /// <summary>
 /// (p1 - c1).t() * R = (p2 - c2).t()
 /// R.t() * (p1 - c1) = (p2 - c2)
@@ -237,7 +264,7 @@ Eigen::Vector3d  calc_pixel_to_axis(
 	if (inverse)
 	{
 		Eigen::Vector3d p2 = p1;
-		return   R.transpose().inverse() * (p2 - c2) + c1;
+		return  pinv(R.transpose()) * (p2 - c2) + c1;
 	}
 
 
@@ -283,10 +310,12 @@ std::vector < Eigen::Vector3d > calc_pixel_to_axis(
 			c_1_matrix.col(i) = c1;
 		}
 
-		MatrixXd dst = R.transpose().inverse() * B_of_center + c_1_matrix;
+		MatrixXd dst = pinv(R.transpose()) * B_of_center + c_1_matrix;
 
 		for (size_t i = 0; i < n; i++)
 			outputs.emplace_back(dst.col(i));
+
+		return outputs;
 	}
 
 	// construct of center matrix A
@@ -527,6 +556,11 @@ int CalculateDstPoints(const char* calibFile, double* pixels, int n, double* dst
 	}
 
 	memcpy(&dstPoints[0], &dstCV[0].x, sizeof(double) * n * 2);
+
+
+	std::vector<cv::Point2d> invPixles;
+	 ret = map_pixels_2_worlds(calibFile, dstCV, invPixles, true);
+
 
 	return 0;
 }
